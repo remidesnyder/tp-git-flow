@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
+import { plainToClass } from 'class-transformer';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { validate } from 'class-validator';
 
 const mockTasksService = {
   create: jest.fn(),
@@ -48,5 +51,14 @@ describe('TasksController', () => {
 
     expect(mockTasksService.create).toHaveBeenCalledWith(dto);
     expect(result).toEqual(created);
+  });
+
+  it('create() rejette un titre vide avec une erreur de validation', async () => {
+    const dto = plainToClass(CreateTaskDto, { title: '' });
+
+    const errors = await validate(dto);
+
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors[0].constraints).toHaveProperty('minLength');
   });
 });
