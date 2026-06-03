@@ -32,6 +32,13 @@ export class TasksController {
     return this.tasksService.findAll();
   }
 
+  @ApiOperation({ summary: 'Récupérer les statistiques des tâches' })
+  @ApiResponse({ status: 200, description: 'Statistiques retournées' })
+  @Get('stats')
+  getStats() {
+    return this.tasksService.getStats();
+  }
+
   @ApiOperation({ summary: 'Récupérer une tâche par ID' })
   @ApiResponse({ status: 200, description: 'Tâche trouvée' })
   @ApiResponse({ status: 404, description: 'Tâche introuvable' })
@@ -44,7 +51,10 @@ export class TasksController {
   @ApiResponse({ status: 200, description: 'Tâche mise à jour' })
   @ApiResponse({ status: 404, description: 'Tâche introuvable' })
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateTaskDto: UpdateTaskDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateTaskDto: UpdateTaskDto,
+  ) {
     return this.tasksService.update(id, updateTaskDto);
   }
 
