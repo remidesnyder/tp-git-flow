@@ -14,6 +14,15 @@ export class TasksService {
     });
   }
 
+  async getStats(): Promise<{ total: number; done: number; pending: number }> {
+    const tasks = await this.prisma.task.findMany();
+    const total = tasks.length;
+    const done = tasks.filter(task => task.done).length;
+    const pending = total - done;
+
+    return { total, done, pending };
+  }
+
   async findAll(): Promise<Task[]> {
     return this.prisma.task.findMany({
       orderBy: { createdAt: 'desc' },
